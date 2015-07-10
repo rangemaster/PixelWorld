@@ -1,3 +1,5 @@
+#define JUMPING_VECT_Y 1
+
 #include "GL\freeglut.h"
 #include <iostream>
 #include <istream>
@@ -7,6 +9,7 @@
 
 #include "LoadingProcessor.h"
 #include "LevelBrick.h"
+#include "Player.h"
 #include "cube.h"
 
 using namespace std;
@@ -17,7 +20,39 @@ int width, height;
 GLfloat lAmbient[] = { 0.7, 0.7, 0.7, 1.0 };
 float cameraAngle;
 vector<LevelBrick*> *levelPeaces;
+Player *player;
+bool p_move_left, p_move_right, p_jump, p_duk;
+void checkKeys()
+{
+	if (p_jump)
+	{
+		cout << "Jump" << endl;
+		p_jump = false;
+		player->setJumping(true);
+		player->setJumpAvailable(false);
+		player->setVecY(player->getVecY() + JUMPING_VECT_Y);
+	}
+}
+void updatePlayerPosition()
+{
+	if (player->isJumping())
+	{
+		// Gravity
+		player->setVecY(player->getVecY() - 0.089);
+	}
+	player->setPosX(player->getPosX() + player->getVecX());
+	player->setPosY(player->getPosY() + player->getVecY());
+	player->setPosZ(player->getPosZ() + player->getVecZ());
 
+	if (player->getPosY() <= 1)
+	{
+		player->setVecY(0);
+		player->setPosY(1);
+		player->setJumpAvailable(true);
+		player->setJumping(false);
+	}
+	//cout << "Player Position: " << player->getPosX() << ", " << player->getPosY() << ", " << player->getPosZ() << endl;
+}
 void DrawWorld()
 {
 	//drawCube();
@@ -46,6 +81,8 @@ void Display()
 
 	DrawWorld();
 
+	drawSpecial(player->getPosX(), player->getPosY(), player->getPosZ(), 0.5, 0.5, 0.5);
+
 
 	glDisable(GL_DEPTH_TEST);
 	glMatrixMode(GL_PROJECTION);
@@ -70,12 +107,17 @@ void KeyHandler(unsigned char key, int x, int y, bool pressed)
 		exit(0);
 		break;
 	case 'a':
+		p_move_left = pressed;
 		break;
 	case 'w':
+		if (pressed && player->isJumpAvailable())
+			p_jump = pressed;
 		break;
 	case 's':
+		p_duk = pressed;
 		break;
 	case 'd':
+		p_move_right = pressed;
 		break;
 	}
 }
@@ -83,7 +125,12 @@ void KeyPressed(unsigned char key, int x, int y){ KeyHandler(key, x, y, true); }
 void KeyReleased(unsigned char key, int x, int y){ KeyHandler(key, x, y, false); }
 void MouseButton(int button, int state, int x, int y){}
 void MouseMotion(int x, int y){}
-void IdleFunc(){}
+void IdleFunc()
+{
+	checkKeys();
+	updatePlayerPosition();
+	glutPostRedisplay();
+}
 
 void GlutInit(int argc, char* argv[])
 {
@@ -114,6 +161,7 @@ void FieldInit()
 	loading.Loading(0, "Start Field Init");
 	Sleep(100);
 	loading.Loading(20, "Creating Johny");
+	player = new Player(0, 1, 0);
 	Sleep(100);
 	loading.Loading(40, "Creating World");
 	Sleep(100);

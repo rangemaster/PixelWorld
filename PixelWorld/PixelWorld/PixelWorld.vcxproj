@@ -85,11 +85,13 @@
     <ClCompile Include="LevelBrick.cpp" />
     <ClCompile Include="LoadingProcessor.cpp" />
     <ClCompile Include="PixelWorld.cpp" />
+    <ClCompile Include="Player.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cube.h" />
     <ClInclude Include="LevelBrick.h" />
     <ClInclude Include="LoadingProcessor.h" />
+    <ClInclude Include="Player.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
