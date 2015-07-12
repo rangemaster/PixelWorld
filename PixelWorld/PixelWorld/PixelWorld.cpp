@@ -1,6 +1,8 @@
-#define JUMPING_VECT_Y 25
-#define GRAVITY 0.089
-#define UPDATETIME 1000/30
+#define JUMPING_VECT_Y 5
+#define MAX_GRAVITY_SPEED -0.4
+#define GRAVITY 0.02
+#define UPDATETIME 1000/60
+#define XPOSITION -5
 
 #include "GL\freeglut.h"
 #include <iostream>
@@ -29,31 +31,33 @@ bool p_move_left, p_move_right, p_jump, p_duk;
 clock_t pastUpdateTime;
 void Reset(void);
 
+void moveRight(){
+	for (int i = 0; i < levelPeaces->size(); i++)
+		levelPeaces->at(i)->setZ(levelPeaces->at(i)->getZ() - 0.1);
+}
+void moveLeft(){
+	for (int i = 0; i < levelPeaces->size(); i++)
+		levelPeaces->at(i)->setZ(levelPeaces->at(i)->getZ() + 0.1);
+}
 void checkKeys()
 {
 	if (p_jump)
 	{
 		p_jump = false;
 		player->startFalling();
-		player->setVecY(player->getVecY() + JUMPING_VECT_Y / 10);
+		player->setVecY(player->getVecY() + (double)JUMPING_VECT_Y / 10);
 	}
-	if (p_move_left)
-	{
+	if (p_move_left){
+		moveLeft();
 		for (int i = 0; i < levelPeaces->size(); i++)
-		{
-			//levelPeaces->at(i)->setX(levelPeaces->at(i)->getX());
-			//levelPeaces->at(i)->setY(levelPeaces->at(i)->getY());
-			levelPeaces->at(i)->setZ(levelPeaces->at(i)->getZ() - 0.1);
-		}
+			if (!BrickCollisionHorizontal(levelPeaces->at(i), player))
+				moveRight();
 	}
-	else if (p_move_right)
-	{
+	else if (p_move_right){
+		moveRight();
 		for (int i = 0; i < levelPeaces->size(); i++)
-		{
-			//levelPeaces->at(i)->setX(levelPeaces->at(i)->getX());
-			//levelPeaces->at(i)->setY(levelPeaces->at(i)->getY());
-			levelPeaces->at(i)->setZ(levelPeaces->at(i)->getZ() + 0.1);
-		}
+			if (!BrickCollisionHorizontal(levelPeaces->at(i), player))
+				moveLeft();
 	}
 }
 void updatePlayerPosition()
@@ -61,7 +65,8 @@ void updatePlayerPosition()
 	if (player->isJumping())
 	{
 		// Gravity
-		player->setVecY(player->getVecY() - GRAVITY);
+		double speed = player->getVecY() - GRAVITY;
+		player->setVecY(speed > MAX_GRAVITY_SPEED ? speed : MAX_GRAVITY_SPEED);
 	}
 	clock_t currentTime = clock();
 	if (pastUpdateTime + UPDATETIME < currentTime)
@@ -70,16 +75,10 @@ void updatePlayerPosition()
 		player->setPosX(player->getPosX() + player->getVecX());
 		player->setPosY(player->getPosY() + player->getVecY());
 		player->setPosZ(player->getPosZ() + player->getVecZ());
-
-		//if (player->getPosY() <= 1)
-		//{
-		//	player->setVecY(0);
-		//	player->setPosY(1);
-		//	player->setJumpAvailable(true);
-		//	player->setJumping(false);
-		//}
 		if (player->isJumping())
-			for (int i = 0; i < levelPeaces->size(); i++){
+		{
+			for (int i = 0; i < levelPeaces->size(); i++)
+			{
 				if (BrickCollisionVertical(levelPeaces->at(i), player))
 				{
 					player->setPosY(levelPeaces->at(i)->getY() + levelPeaces->at(i)->getH());
@@ -87,6 +86,15 @@ void updatePlayerPosition()
 					break;
 				}
 			}
+		}
+
+		if (player->getPosY() <= -5)
+		{
+			player->setVecY(0);
+			player->setPosY(1);
+			player->setJumpAvailable(true);
+			player->setJumping(false);
+		}
 	}
 	//cout << "Player Position: " << player->getPosX() << ", " << player->getPosY() << ", " << player->getPosZ() << endl;
 }
@@ -110,7 +118,7 @@ void Display()
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	gluLookAt(7 * cos(0), 2, 7 * sin(0), 0, player->getPosY(), 0, 1, 1, 0);
+	gluLookAt(7 * cos(0), 2, 7 * sin(0), 0, player->getPosY(), 0, 0, 1, 0);
 
 	glLightfv(GL_LIGHT0, GL_AMBIENT, lAmbient);
 	glEnable(GL_DEPTH_TEST);
@@ -118,7 +126,7 @@ void Display()
 
 	DrawWorld();
 
-	drawSpecial(player->getPosX(), player->getPosY(), player->getPosZ(), player->getW(), player->getH(), player->getD());
+	drawSpecial(player->getPosX() + player->getD() / 2, player->getPosY(), player->getPosZ(), player->getW(), player->getH(), player->getD());
 
 
 	glDisable(GL_DEPTH_TEST);
@@ -196,6 +204,9 @@ void GlutInit(int argc, char* argv[])
 	glutIdleFunc(IdleFunc);
 	loading.Loading(100, "End Glut Init");
 }
+void add(LevelBrick *peace){ levelPeaces->push_back(peace); }
+void addBrick(double x, double y, double z, double w, double h, double d){ add(new LevelBrick(x, y, z, w, h, d)); }
+void addBrick(double y, double z){ addBrick(XPOSITION, y, z, 1, 1, 1); }
 void FieldInit()
 {
 	loading.Loading(0, "Start Field Init");
@@ -204,14 +215,17 @@ void FieldInit()
 	cameraAngle = 0;
 	Sleep(100);
 	loading.Loading(20, "Creating Johny");
-	player = new Player(0, 1, 0);
+	player = new Player(XPOSITION, 1, 0);
 	Sleep(100);
 	loading.Loading(40, "Creating World");
 	Sleep(100);
 	levelPeaces = new vector < LevelBrick* > ;
-	levelPeaces->push_back(new LevelBrick(0, 0, 0, 1, 1, 1));
-	levelPeaces->push_back(new LevelBrick(0, 1, 1, 1, 1, 1));
-	levelPeaces->push_back(new LevelBrick(0, 2, 2, 1, 1, 1));
+	addBrick(0, 0);
+	addBrick(1, 1);
+	addBrick(2, 2);
+	addBrick(0, -1);
+	addBrick(0, -2);
+
 	loading.Loading(100, "End Field Init");
 }
 int End()

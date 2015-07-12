@@ -22,3 +22,10 @@ bool BrickCollisionVertical(LevelBrick* levelPeace, Player* player)
 		return true;
 	return false;
 }
+
+bool BrickCollisionHorizontal(LevelBrick* levelPeace, Player* player)
+{
+	if (InTheArea(levelPeace->getZ(), levelPeace->getW(), levelPeace->getY(), levelPeace->getD(), player->getPosZ(), player->getW(), player->getPosY(), player->getH()))
+		return true;
+	return false;
+}

@@ -15,8 +15,8 @@ Player::Player(double x, double y, double z)
 	vecx = 0;
 	vecy = 0;
 	vecz = 0;
-	setJumping(false);
-	setJumpAvailable(true);
+	setJumping(true);
+	setJumpAvailable(false);
 }
 
 
@@ -53,11 +53,9 @@ void Player::stopFalling()
 	setJumping(false);
 	setJumpAvailable(true);
 	setVecY(0);
-	cout << "Stop falling" << endl;
 }
 void Player::startFalling()
 {
 	setJumping(true);
 	setJumpAvailable(false);
-	cout << "Start falling" << endl;
 }

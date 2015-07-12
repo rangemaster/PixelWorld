@@ -82,7 +82,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="CollisionManager.cpp" />
-    <ClCompile Include="cube.cpp" />
+    <ClCompile Include="Cube.cpp" />
     <ClCompile Include="LevelBrick.cpp" />
     <ClCompile Include="LoadingProcessor.cpp" />
     <ClCompile Include="PixelWorld.cpp" />
@@ -90,7 +90,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CollisionManager.h" />
-    <ClInclude Include="cube.h" />
+    <ClInclude Include="Cube.h" />
     <ClInclude Include="LevelBrick.h" />
     <ClInclude Include="LoadingProcessor.h" />
     <ClInclude Include="Player.h" />

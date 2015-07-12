@@ -8,3 +8,4 @@
 using namespace std;
 
 bool BrickCollisionVertical(LevelBrick* levelPeace, Player* player);
+bool BrickCollisionHorizontal(LevelBrick* levelPeace, Player* player);
