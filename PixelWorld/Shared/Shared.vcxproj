@@ -11,9 +11,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{369675D1-78A2-451F-A3C9-FC0C2A115365}</ProjectGuid>
+    <ProjectGuid>{6BD0D71B-EAD7-4538-BE47-5BE1DEE7BA3E}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>PixelWorld</RootNamespace>
+    <RootNamespace>Shared</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -53,13 +53,10 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>C:\freeglut\include;E:\GitBash\PixelWorld\PixelWorld\Shared;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\freeglut\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>freeglut.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -81,23 +78,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Client.cpp" />
-    <ClCompile Include="CollisionManager.cpp" />
-    <ClCompile Include="Cube.cpp" />
-    <ClCompile Include="Launcher.cpp" />
-    <ClCompile Include="LevelBrick.cpp" />
-    <ClCompile Include="LoadingProcessor.cpp" />
-    <ClCompile Include="PixelWorld.cpp" />
-    <ClCompile Include="Player.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Client.h" />
-    <ClInclude Include="CollisionManager.h" />
-    <ClInclude Include="Cube.h" />
-    <ClInclude Include="Launcher.h" />
-    <ClInclude Include="LevelBrick.h" />
-    <ClInclude Include="LoadingProcessor.h" />
-    <ClInclude Include="Player.h" />
+    <ClInclude Include="Packages.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

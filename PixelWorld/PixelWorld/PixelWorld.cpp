@@ -13,6 +13,7 @@
 #include <ctime>
 
 #include "LoadingProcessor.h"
+#include "Launcher.h"
 #include "LevelBrick.h"
 #include "Player.h"
 #include "cube.h"
@@ -21,6 +22,7 @@
 using namespace std;
 
 LoadingProcessor loading;
+Launcher launcher;
 
 int width, height;
 GLfloat lAmbient[] = { 0.7, 0.7, 0.7, 1.0 };
@@ -204,6 +206,13 @@ void GlutInit(int argc, char* argv[])
 	glutIdleFunc(IdleFunc);
 	loading.Loading(100, "End Glut Init");
 }
+void LauncherInit(void)
+{
+	loading.Loading(0, "Launcher Init");
+	launcher.Init();
+	loading.Loading(20, "Create Connection");
+	loading.Loading(100, "Launcer Init");
+}
 void add(LevelBrick *peace){ levelPeaces->push_back(peace); }
 void addBrick(double x, double y, double z, double w, double h, double d){ add(new LevelBrick(x, y, z, w, h, d)); }
 void addBrick(double y, double z){ addBrick(XPOSITION, y, z, 1, 1, 1); }
@@ -238,6 +247,7 @@ int End()
 int main(int argc, char* argv[])
 {
 	cout << "Pixel world has been started" << endl;
+	LauncherInit();
 	FieldInit();
 	GlutInit(argc, argv);
 
