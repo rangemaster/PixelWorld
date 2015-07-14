@@ -9,7 +9,6 @@ Client::Client()
 Client::~Client()
 {
 }
-
 int Client::Connect(char *IP, int Port)
 {
 	WSAStartup(MAKEWORD(2, 2), &Data);
@@ -24,17 +23,17 @@ int Client::Connect(char *IP, int Port)
 	int ss = connect(sock, (struct sockaddr *)&i_sock, sizeof(i_sock));
 	if (ss != 0)
 	{
-		printf("Cannot connect");
-		return 0;
+		printf("Cannot connect\n");
+		return 1;
 	}
-	printf("Succefully connected");
-	return 1;
+	printf("Succefully connected\n");
+	return 0;
 }
 
 int Client::Send(char *Buf, int len, int Client)
 {
-	int slen;
-	slen = send(sock, Buf, len, 0);
+	int slen=0;
+	slen = send(sock, Buf, len, Client);
 	if (slen < 0)
 	{
 		printf("cannot send data");
@@ -44,8 +43,8 @@ int Client::Send(char *Buf, int len, int Client)
 }
 int Client::Recive(char *Buf, int len, int Client)
 {
-	int slen;
-	slen = recv(sock, Buf, len, 0);
+	int slen = 0;
+	slen = recv(sock, Buf, len, Client);
 	if (slen < 0)
 	{
 		printf("cannot recive data");

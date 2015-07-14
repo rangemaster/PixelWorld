@@ -11,18 +11,20 @@
 #include <vector>
 #include <Windows.h>
 #include <ctime>
+#include <stdio.h>
 
 #include "LoadingProcessor.h"
-#include "Launcher.h"
 #include "LevelBrick.h"
 #include "Player.h"
 #include "cube.h"
 #include "CollisionManager.h"
+#include "Client.h"
+#include "Launcher.h"
 
 using namespace std;
 
-LoadingProcessor loading;
 Launcher launcher;
+LoadingProcessor loading;
 
 int width, height;
 GLfloat lAmbient[] = { 0.7, 0.7, 0.7, 1.0 };
@@ -144,7 +146,7 @@ void Display()
 }
 void Reshape(int glwidth, int glheight)
 {
-	::width = glwidth; ::height = glheight; glViewport(0, 0, width, height);
+	width = glwidth; height = glheight; glViewport(0, 0, width, height);
 }
 void KeyHandler(unsigned char key, int x, int y, bool pressed)
 {
@@ -206,12 +208,20 @@ void GlutInit(int argc, char* argv[])
 	glutIdleFunc(IdleFunc);
 	loading.Loading(100, "End Glut Init");
 }
-void LauncherInit(void)
+bool LauncherInit(void)
 {
+	bool succes = true;
 	loading.Loading(0, "Launcher Init");
-	launcher.Init();
+	succes &= launcher.Init();
 	loading.Loading(20, "Create Connection");
-	loading.Loading(100, "Launcer Init");
+	succes &= launcher.ConnectToServer();
+	loading.Loading(80, "Send test message...");
+	succes &= launcher.SendTestMessage();
+	loading.Loading((succes ? 80 : -1), (succes ? "Send!" : "Failed!"));
+	loading.Loading(90, "Recive test message...");
+	succes &= launcher.ReciveTestMessage();
+	loading.Loading((succes ? 90 : -1), (succes ? "Recived!" : "Failed!"));
+	return succes;
 }
 void add(LevelBrick *peace){ levelPeaces->push_back(peace); }
 void addBrick(double x, double y, double z, double w, double h, double d){ add(new LevelBrick(x, y, z, w, h, d)); }
@@ -247,13 +257,19 @@ int End()
 int main(int argc, char* argv[])
 {
 	cout << "Pixel world has been started" << endl;
-	LauncherInit();
-	FieldInit();
-	GlutInit(argc, argv);
+	bool succes = true;
+	succes &= LauncherInit();
+	if (!succes)
+	{
+		loading.Loading(-1, "Init failed");
+		return End();
+	}
+	//FieldInit();
+	//GlutInit(argc, argv);
 
-	Sleep(2000);
+	//Sleep(2000);
 
-	glutMainLoop();
+	//glutMainLoop();
 
 	return End();
 }

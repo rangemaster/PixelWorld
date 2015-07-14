@@ -1,5 +1,8 @@
 #pragma once
 #include <string>
+#include <sstream>
+#include <iostream>
+using namespace std;
 
 class LoadingProcessor{
 public:
@@ -12,4 +15,5 @@ public:
 	void Loading(int percentage, std::string feedback);
 private:
 	int percentage, index;
+	void Message(string message, int color);
 };

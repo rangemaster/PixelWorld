@@ -82,6 +82,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp" />
+    <ClCompile Include="NClient.cpp" />
     <ClCompile Include="CollisionManager.cpp" />
     <ClCompile Include="Cube.cpp" />
     <ClCompile Include="Launcher.cpp" />
@@ -92,6 +93,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h" />
+    <ClInclude Include="NClient.h" />
     <ClInclude Include="CollisionManager.h" />
     <ClInclude Include="Cube.h" />
     <ClInclude Include="Launcher.h" />

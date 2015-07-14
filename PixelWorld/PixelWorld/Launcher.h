@@ -1,18 +1,25 @@
 #pragma once
+#include <iostream>
+#include <string>
 #include "Client.h"
+#include "LoadingProcessor.h"
+
+using namespace std;
 
 class Launcher
 {
 public:
 	Launcher();
 	~Launcher();
-	void Init(void);
-	int ConnectToServer(void);
+	bool Init(void);
+	bool ConnectToServer();
 	void Draw(void);
 	void ButtonPressed(int ButtonIndex);
+	bool SendTestMessage(void);
+	bool ReciveTestMessage(void);
 private:
 	Client client;
-	void Start(void);
+	//void Start(void);
 
 };
 

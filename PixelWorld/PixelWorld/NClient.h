@@ -1,27 +1,22 @@
-#ifndef Client_H
-#define Client_H
-
+#pragma once
 #pragma comment(lib, "ws2_32.lib")
 #include <Windows.h>
-#include <winsock.h>
 #include <stdio.h>
 #include "Packages.h"
 
-using namespace std;
-
-class Client
+class NClient
 {
 public:
-	Client();
-	~Client();
+	NClient();
+	~NClient();
 	int Connect(char *IP, int Port);
 	int Send(char *Buf, int len, int Client);
 	int Recive(char *Buf, int len, int Client);
 	int SendPackage(MyPacket *package);
 	int RecivePackage(MyPacket *package);
 private:
-	SOCKET sock;
-	SOCKADDR_IN i_sock;
-	WSADATA Data;
+	//SOCKET sock;
+	//SOCKADDR_IN i_sock;
+	//WSADATA Data;
 };
-#endif
+

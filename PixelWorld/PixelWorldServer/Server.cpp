@@ -1,19 +1,15 @@
 #include "Server.h"
-#include "Packages.h"
-
-
-
 Server::Server()
 {
 }
-
-
 Server::~Server()
 {
 }
+void Print(string message){ cout << message << endl; }
+
 int Server::StartServer(int Port)
 {
-	printf("Start Server\n");
+	Print("Start Server\n");
 	int err = 0;
 	WSAStartup(MAKEWORD(2, 2), &Data);
 	sock = socket(AF_INET, SOCK_STREAM, 0);
@@ -26,17 +22,17 @@ int Server::StartServer(int Port)
 	i_sock.sin_family = AF_INET;
 	i_sock.sin_addr.s_addr = htonl(INADDR_ANY);
 	i_sock.sin_port = htons(Port);
-	printf("Wating for client trying to connect\n");
+	Print("Wating for client trying to connect");
 	err = bind(sock, (LPSOCKADDR)&i_sock, sizeof(i_sock));
 	if (err != 0)
 	{
-		printf("NO SOCKET");
+		Print("NO SOCKET");
 		return 0;
 	}
 	err = listen(sock, 2);
 	if (err == SOCKET_ERROR)
 	{
-		printf("SOCKET ERROR");
+		Print("SOCKET ERROR");
 		return 0;
 	}
 	while (1)
@@ -49,10 +45,12 @@ int Server::StartServer(int Port)
 				sock2[clients] = accept(sock, (sockaddr *)&i_sock2, &so2len);
 				if (sock2[clients] == INVALID_SOCKET)
 				{
-					printf("INVALID SOCKET");
+					Print("INVALID SOCKET");
 					return 0;
 				}
-				printf("a client has joined the server(IP: %s)\n", i_sock2.sin_addr.s_addr);
+				std::stringstream ss;
+				ss << "a client has joined the server(IP: " << i_sock2.sin_addr.s_addr << ")" << endl;
+				Print(ss.str());
 				clients++;
 				continue;
 			}

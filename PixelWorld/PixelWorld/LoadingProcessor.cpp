@@ -28,15 +28,30 @@ void LoadingProcessor::PrintPercentage()
 }
 void LoadingProcessor::Loading(int percentage, std::string feedback)
 {
+	int color = 7;
+	std::stringstream ss;
 	if (percentage >= 100)
 	{
-		HANDLE hConsole;
-		hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-		SetConsoleTextAttribute(hConsole, 2);
-		cout << "Loading" << (index == 0 ? ".  " : index == 1 ? ".. " : "...") << std::setw(5) << percentage << "%" << std::setw(30) << feedback << endl;
-		SetConsoleTextAttribute(hConsole, 7);
+		color = 2;
+		cout << "Loading" << (index == 0 ? ".  " : index == 1 ? ".. " : "...") << std::setw(5) << percentage << "%" << std::setw(30) << feedback;
+	}
+	else if (percentage <= -1)
+	{
+		color = 4;
+		ss << "Loading Failed --- " << feedback ;
 	}
 	else
-		cout << "Loading" << (index == 0 ? ".  " : index == 1 ? ".. " : "...") << std::setw(5) << percentage << "%" << std::setw(30) << feedback << endl;
+	{
+		ss << "Loading" << (index == 0 ? ".  " : index == 1 ? ".. " : "...") << std::setw(5) << percentage << "%" << std::setw(30) << feedback;
+	}
+	Message(ss.str(), color);
 	IncIndex();
+}
+void LoadingProcessor::Message(string message, int color)
+{
+	HANDLE hConsole;
+	hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+	SetConsoleTextAttribute(hConsole, color);
+	cout << message << endl;
+	SetConsoleTextAttribute(hConsole, 7);
 }

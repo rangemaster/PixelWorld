@@ -2,6 +2,12 @@
 #pragma comment(lib, "ws2_32.lib")
 #include <Windows.h>
 #include <stdio.h>
+#include <iostream>
+#include <sstream>
+#include <string>
+#include "Packages.h"
+
+using namespace std;
 
 class Server
 {
