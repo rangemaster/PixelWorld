@@ -17,8 +17,8 @@ public:
 	int Connect(char *IP, int Port);
 	int Send(char *Buf, int len, int Client);
 	int Recive(char *Buf, int len, int Client);
-	int SendPackage(MyPacket *package);
-	int RecivePackage(MyPacket *package);
+	int SendPackage(Package *package);
+	int RecivePackage(Package *package);
 private:
 	SOCKET sock;
 	SOCKADDR_IN i_sock;

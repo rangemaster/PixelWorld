@@ -5,6 +5,7 @@
 #include <iostream>
 #include <sstream>
 #include <string>
+#include <string.h>
 #include "Packages.h"
 
 using namespace std;
@@ -17,6 +18,12 @@ public:
 	int StartServer(int Port);
 	int Send(char *Buf, int len, int Client);
 	int Recive(char *Buf, int len, int Client);
+	bool ReciveTestChar(void);
+	bool SendTestChar(void);
+	bool ReciveTestMessage(void);
+	bool SendTestMessage(void);
+	void SendPackage(void);
+	void RecivePackage(void);
 	void SendPackages(void);
 	void RecivePackages(void);
 	int EndSocket();

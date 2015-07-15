@@ -215,12 +215,19 @@ bool LauncherInit(void)
 	succes &= launcher.Init();
 	loading.Loading(20, "Create Connection");
 	succes &= launcher.ConnectToServer();
+	loading.Loading(60, "Send test character...");
+	succes &= launcher.SendTestCharacter(TEST_CHAR_CLIENT);
+	loading.Loading((succes ? 60 : -1), (succes ? "Send!" : "Send char Failed!"));
+	loading.Loading(70, "Recive test character...");
+	succes &= launcher.ReciveTestCharacter();
+	loading.Loading((succes ? 70 : -1), (succes ? "Recived!" : "Recive char Failed!"));
 	loading.Loading(80, "Send test message...");
-	succes &= launcher.SendTestMessage();
-	loading.Loading((succes ? 80 : -1), (succes ? "Send!" : "Failed!"));
+	succes &= launcher.SendTestMessage(TEST_STRING_CLIENT);
+	loading.Loading((succes ? 80 : -1), (succes ? "Send!" : "Send string Failed!"));
 	loading.Loading(90, "Recive test message...");
 	succes &= launcher.ReciveTestMessage();
-	loading.Loading((succes ? 90 : -1), (succes ? "Recived!" : "Failed!"));
+	loading.Loading((succes ? 90 : -1), (succes ? "Recived!" : "Recived string Failed!"));
+	succes ? loading.Loading(100, "Launcher Init Succes") : loading.Loading(-1, "Launcher Init Failed");
 	return succes;
 }
 void add(LevelBrick *peace){ levelPeaces->push_back(peace); }
@@ -259,11 +266,6 @@ int main(int argc, char* argv[])
 	cout << "Pixel world has been started" << endl;
 	bool succes = true;
 	succes &= LauncherInit();
-	if (!succes)
-	{
-		loading.Loading(-1, "Init failed");
-		return End();
-	}
 	//FieldInit();
 	//GlutInit(argc, argv);
 

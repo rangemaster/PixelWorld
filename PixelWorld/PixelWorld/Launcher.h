@@ -15,7 +15,9 @@ public:
 	bool ConnectToServer();
 	void Draw(void);
 	void ButtonPressed(int ButtonIndex);
-	bool SendTestMessage(void);
+	bool SendTestCharacter(char c);
+	bool ReciveTestCharacter(void);
+	bool SendTestMessage(string c);
 	bool ReciveTestMessage(void);
 private:
 	Client client;

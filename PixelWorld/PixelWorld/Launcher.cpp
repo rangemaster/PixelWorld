@@ -1,5 +1,6 @@
 #include "Launcher.h"
 
+string testText = "Test Text For The Server";
 
 Launcher::Launcher()
 {
@@ -27,11 +28,70 @@ bool Launcher::ConnectToServer()
 void Launcher::Draw(void){}
 void Launcher::ButtonPressed(int ButtonIndex){}
 
-bool Launcher::SendTestMessage(void)
+bool Launcher::SendTestCharacter(char c)
 {
-	return false;
+	try{
+		int len = 1;
+		if (client.Send(&c, len, 0) == -1)
+			return false;
+	}
+	catch (...)
+	{
+		return false;
+	}
+	return true;
+}
+bool Launcher::ReciveTestCharacter(void)
+{
+	try
+	{
+		int len = 1;
+		char c;
+		if (client.Recive(&c, len, 0) == -1)
+			return false;
+		if (c == TEST_CHAR_SERVER)
+			return true;
+	}
+	catch (...)
+	{
+		return false;
+	}
+	return true;
+}
+bool Launcher::SendTestMessage(string c)
+{
+	string text = TEST_STRING_CLIENT;
+	int textlength = text.length();
+	char buf = (char)(textlength);
+	if (client.Send(&buf, 1, 0) == -1)
+		return false;
+	//cout << "len to buf -> " << textlength << " = " << buf << endl;
+	for (int i = 0; i < textlength; i++)
+	{
+		buf = text[i];
+		if (client.Send(&buf, 1, 0) == -1)
+			return false;
+	}
+	//cout << "Send: [" << text << "]" << endl;
+	return true;
 }
 bool Launcher::ReciveTestMessage(void)
 {
+	string text = "";
+	char buf;
+	int len = 0;
+	if (client.Recive(&buf, 1, 0) == -1)
+		return false;
+	len = (int)(buf);
+	//cout << "Buf to len -> " << buf << " = " << len << endl;
+	for (int i = 0; i < len; i++)
+	{
+		if (client.Recive(&buf, 1, 0) == -1)
+			return false;
+		text += buf;
+	}
+	//cout << "Message: [" << text << "]" << endl;
+	if (text == TEST_STRING_SERVER)
+		return true;
 	return false;
 }

@@ -51,6 +51,15 @@ int Server::StartServer(int Port)
 				std::stringstream ss;
 				ss << "a client has joined the server(IP: " << i_sock2.sin_addr.s_addr << ")" << endl;
 				Print(ss.str());
+				bool succes = true;
+				succes &= ReciveTestChar();
+				Print(succes ? "Char Recived Succesfully" : "Char Recived Unsuccesfully");
+				succes &= SendTestChar();
+				Print(succes ? "Char Send Succesfully" : "Char Send Unsuccesfully");
+				succes &= ReciveTestMessage();
+				Print(succes ? "String Recived Succesfully" : "String Recived Unsuccesfully");
+				succes &= SendTestMessage();
+				Print(succes ? "String Send Succesfully" : "String Send Unsuccesfully");
 				clients++;
 				continue;
 			}
@@ -63,6 +72,60 @@ int Server::StartServer(int Port)
 	return 1;
 }
 
+bool Server::ReciveTestChar(void)
+{
+	char buf;
+	int len = 1;
+	if (Recive(&buf, len, 0) == -1)
+		return false;
+	if (buf != TEST_CHAR_CLIENT)
+		return false;
+	return true;
+}
+bool Server::SendTestChar(void)
+{
+	char buf = TEST_CHAR_SERVER;
+	if (Send(&buf, 1, 0) == -1)
+		return false;
+	return true;
+}
+bool Server::ReciveTestMessage(void)
+{
+	string text = "";
+	char buf;
+	int len = 0;
+	if (Recive(&buf, 1, 0) == -1)
+		return false;
+	len = (int)(buf);
+	//cout << "Buf to len -> " << buf << " = " << len << endl;
+	for (int i = 0; i < len; i++)
+	{
+		if (Recive(&buf, 1, 0) == -1)
+			return false;
+		text += buf;
+	}
+	//cout << "Message: [" << text << "]" << endl;
+	if (text == TEST_STRING_CLIENT)
+		return true;
+	return false;
+}
+bool Server::SendTestMessage(void)
+{
+	string text = TEST_STRING_SERVER;
+	int textlength = text.length();
+	char buf = (char)(textlength);
+	if (Send(&buf, 1, 0) == -1)
+		return false;
+	//cout << "len to buf -> " << textlength << " = " << buf << endl;
+	for (int i = 0; i < textlength; i++)
+	{
+		buf = text[i];
+		if (Send(&buf, 1, 0) == -1)
+			return false;
+	}
+	//cout << "Send: [" << text << "]" << endl;
+	return true;
+}
 
 int Server::Send(char *Buf, int len, int Client)
 {
@@ -70,8 +133,7 @@ int Server::Send(char *Buf, int len, int Client)
 	slen = send(sock2[Client], Buf, len, 0);
 	if (slen < 0)
 	{
-		printf("Cannot send data !");
-		return 1;
+		return -1;
 	}
 	return slen;
 }
@@ -81,25 +143,40 @@ int Server::Recive(char *Buf, int len, int Client)
 	slen = recv(sock2[Client], Buf, len, 0);
 	if (slen < 0)
 	{
-		printf("Cannot send data !");
-		return 1;
+		return -1;
 	}
 	return slen;
+}
+void Server::SendPackage(void){}
+void Server::RecivePackage(void)
+{
+	Package package;
+	int value = Recive((char *)&package, sizeof(package), 0);
+	cout << "Value: " << value << endl;
+	cout << "Value 1: " << package.value1 << endl;
+	cout << "Value 2: " << package.value2 << endl;
 }
 void Server::SendPackages()
 {
 	for (int i = 0; i < 4; i++)
 	{
-		MyPacket packet;
-		Send((char *)&packet, sizeof(packet), i);
+		Package package;
+		Send((char *)&package, sizeof(package), i);
 	}
 }
 void Server::RecivePackages()
 {
 	for (int i = 0; i < 4; i++)
 	{
-		MyPacket packet;
-		Recive((char *)&packet, sizeof(packet), i);
+		Package package;
+		int value = Recive((char *)&package, sizeof(package), i);
+		cout << "Value: " << value << endl;
+		cout << "Value 1: " << package.value1 << endl;
+		cout << "Value 2: " << package.value2 << endl;
+		cout << "Tekst: ";
+		for (int k = 0; k < 4; k++)
+			cout << package.mystring[k];
+		cout << endl;
 	}
 }
 

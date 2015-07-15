@@ -33,7 +33,7 @@ void LoadingProcessor::Loading(int percentage, std::string feedback)
 	if (percentage >= 100)
 	{
 		color = 2;
-		cout << "Loading" << (index == 0 ? ".  " : index == 1 ? ".. " : "...") << std::setw(5) << percentage << "%" << std::setw(30) << feedback;
+		ss << "Loading" << (index == 0 ? ".  " : index == 1 ? ".. " : "...") << std::setw(5) << percentage << "%" << std::setw(30) << feedback;
 	}
 	else if (percentage <= -1)
 	{

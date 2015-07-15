@@ -36,8 +36,7 @@ int Client::Send(char *Buf, int len, int Client)
 	slen = send(sock, Buf, len, Client);
 	if (slen < 0)
 	{
-		printf("cannot send data");
-		return 1;
+		return -1;
 	}
 	return slen;
 }
@@ -47,16 +46,15 @@ int Client::Recive(char *Buf, int len, int Client)
 	slen = recv(sock, Buf, len, Client);
 	if (slen < 0)
 	{
-		printf("cannot recive data");
-		return 1;
+		return -1;
 	}
 	return slen;
 }
-int Client::SendPackage(MyPacket *package)
+int Client::SendPackage(Package *package)
 {
 	return Send((char *)&package, sizeof(package), 1);
 }
-int Client::RecivePackage(MyPacket *package)
+int Client::RecivePackage(Package *package)
 {
 	return Recive((char *)&package, sizeof(package), 1);
 }
