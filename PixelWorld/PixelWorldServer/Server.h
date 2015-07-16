@@ -18,14 +18,16 @@ public:
 	int StartServer(int Port);
 	int Send(char *Buf, int len, int Client);
 	int Recive(char *Buf, int len, int Client);
-	bool ReciveTestChar(void);
-	bool SendTestChar(void);
-	bool ReciveTestMessage(void);
-	bool SendTestMessage(void);
+	bool ReciveTestChar(int);
+	bool SendTestChar(int);
+	bool ReciveTestMessage(int);
+	bool SendTestMessage(int);
 	void SendPackage(void);
 	void RecivePackage(void);
 	void SendPackages(void);
 	void RecivePackages(void);
+	bool RecivePosition(int, Pos3D &);
+	bool ReciveVector(int, Vect3D);
 	int EndSocket();
 private:
 	SOCKET sock;

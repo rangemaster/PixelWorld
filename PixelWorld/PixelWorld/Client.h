@@ -19,6 +19,8 @@ public:
 	int Recive(char *Buf, int len, int Client);
 	int SendPackage(Package *package);
 	int RecivePackage(Package *package);
+	bool SendPosition(Pos3D pos);
+	bool SendVector(Vect3D pos);
 private:
 	SOCKET sock;
 	SOCKADDR_IN i_sock;

@@ -95,3 +95,8 @@ bool Launcher::ReciveTestMessage(void)
 		return true;
 	return false;
 }
+bool Launcher::SendPlayerInfo(void)
+{
+	Pos3D pos(1, 1, 1);
+	return client.SendPosition(pos);
+}

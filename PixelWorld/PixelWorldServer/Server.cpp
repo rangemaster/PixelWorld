@@ -49,17 +49,26 @@ int Server::StartServer(int Port)
 					return 0;
 				}
 				std::stringstream ss;
-				ss << "a client has joined the server(IP: " << i_sock2.sin_addr.s_addr << ")" << endl;
+				ss << "a client has joined the server(IP: " << i_sock2.sin_addr.s_addr << ")";
 				Print(ss.str());
 				bool succes = true;
-				succes &= ReciveTestChar();
-				Print(succes ? "Char Recived Succesfully" : "Char Recived Unsuccesfully");
-				succes &= SendTestChar();
-				Print(succes ? "Char Send Succesfully" : "Char Send Unsuccesfully");
-				succes &= ReciveTestMessage();
-				Print(succes ? "String Recived Succesfully" : "String Recived Unsuccesfully");
-				succes &= SendTestMessage();
-				Print(succes ? "String Send Succesfully" : "String Send Unsuccesfully");
+				ss = std::stringstream();
+				succes &= ReciveTestChar(clients);
+				ss << (succes ? "[Succes]" : "[Failed]");
+				succes &= SendTestChar(clients);
+				ss << (succes ? "[Succes]" : "[Failed]");
+				succes &= ReciveTestMessage(clients);
+				ss << (succes ? "[Succes]" : "[Failed]");
+				succes &= SendTestMessage(clients);
+				ss << (succes ? "[Succes]" : "[Failed]");
+				Print(ss.str());
+				Pos3D pos;
+				Vect3D vect;
+				succes &= RecivePosition(clients, pos);
+				succes &= ReciveVector(clients, vect);
+				ss = std::stringstream();
+				ss << "Pos: " << pos.x << ", " << pos.y << ", " << pos.z;
+				Print(ss.str());
 				clients++;
 				continue;
 			}
@@ -72,35 +81,35 @@ int Server::StartServer(int Port)
 	return 1;
 }
 
-bool Server::ReciveTestChar(void)
+bool Server::ReciveTestChar(int clientIndex)
 {
 	char buf;
 	int len = 1;
-	if (Recive(&buf, len, 0) == -1)
+	if (Recive(&buf, len, clientIndex) == -1)
 		return false;
 	if (buf != TEST_CHAR_CLIENT)
 		return false;
 	return true;
 }
-bool Server::SendTestChar(void)
+bool Server::SendTestChar(int clientIndex)
 {
 	char buf = TEST_CHAR_SERVER;
-	if (Send(&buf, 1, 0) == -1)
+	if (Send(&buf, 1, clientIndex) == -1)
 		return false;
 	return true;
 }
-bool Server::ReciveTestMessage(void)
+bool Server::ReciveTestMessage(int clientIndex)
 {
 	string text = "";
 	char buf;
 	int len = 0;
-	if (Recive(&buf, 1, 0) == -1)
+	if (Recive(&buf, 1, clientIndex) == -1)
 		return false;
 	len = (int)(buf);
 	//cout << "Buf to len -> " << buf << " = " << len << endl;
 	for (int i = 0; i < len; i++)
 	{
-		if (Recive(&buf, 1, 0) == -1)
+		if (Recive(&buf, 1, clientIndex) == -1)
 			return false;
 		text += buf;
 	}
@@ -109,18 +118,18 @@ bool Server::ReciveTestMessage(void)
 		return true;
 	return false;
 }
-bool Server::SendTestMessage(void)
+bool Server::SendTestMessage(int clientIndex)
 {
 	string text = TEST_STRING_SERVER;
 	int textlength = text.length();
 	char buf = (char)(textlength);
-	if (Send(&buf, 1, 0) == -1)
+	if (Send(&buf, 1, clientIndex) == -1)
 		return false;
 	//cout << "len to buf -> " << textlength << " = " << buf << endl;
 	for (int i = 0; i < textlength; i++)
 	{
 		buf = text[i];
-		if (Send(&buf, 1, 0) == -1)
+		if (Send(&buf, 1, clientIndex) == -1)
 			return false;
 	}
 	//cout << "Send: [" << text << "]" << endl;
@@ -175,9 +184,26 @@ void Server::RecivePackages()
 		cout << "Value 2: " << package.value2 << endl;
 		cout << "Tekst: ";
 		for (int k = 0; k < 4; k++)
-			cout << package.mystring[k];
+			cout << package.string[k];
 		cout << endl;
 	}
+}
+bool Server::RecivePosition(int clientIndex, Pos3D &pos)
+{
+	char buf11, buf12, buf21, buf22, buf31, buf32;
+	Recive(&buf11, 1, clientIndex);
+	//Recive(&buf12, 1, clientIndex);
+	Recive(&buf21, 1, clientIndex);
+	//Recive(&buf22, 1, clientIndex);
+	//Recive(&buf31, 1, clientIndex);
+	//Recive(&buf32, 1, clientIndex);
+	pos.x = (int)(buf11);
+	pos.y = (int)(buf21);
+	return false;
+}
+bool Server::ReciveVector(int clientIndex, Vect3D vect)
+{
+	return false;
 }
 
 int Server::EndSocket()

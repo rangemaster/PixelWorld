@@ -184,8 +184,9 @@ void IdleFunc()
 	glutPostRedisplay();
 }
 
-void GlutInit(int argc, char* argv[])
+bool GlutInit(int argc, char* argv[])
 {
+	bool succes = true;
 	loading.Loading(0, "Start Glut Init");
 	glutInit(&argc, argv);
 	loading.Loading(10, "Creating play window");
@@ -207,6 +208,7 @@ void GlutInit(int argc, char* argv[])
 	loading.Loading(90, "Init Other functions");
 	glutIdleFunc(IdleFunc);
 	loading.Loading(100, "End Glut Init");
+	return succes;
 }
 bool LauncherInit(void)
 {
@@ -227,14 +229,17 @@ bool LauncherInit(void)
 	loading.Loading(90, "Recive test message...");
 	succes &= launcher.ReciveTestMessage();
 	loading.Loading((succes ? 90 : -1), (succes ? "Recived!" : "Recived string Failed!"));
+	succes &= launcher.SendPlayerInfo();
+	loading.Loading((succes ? 95 : -1), (succes ? "Send!" : "Send pos Failed!"));
 	succes ? loading.Loading(100, "Launcher Init Succes") : loading.Loading(-1, "Launcher Init Failed");
 	return succes;
 }
 void add(LevelBrick *peace){ levelPeaces->push_back(peace); }
 void addBrick(double x, double y, double z, double w, double h, double d){ add(new LevelBrick(x, y, z, w, h, d)); }
 void addBrick(double y, double z){ addBrick(XPOSITION, y, z, 1, 1, 1); }
-void FieldInit()
+bool FieldInit()
 {
+	bool succes = true;
 	loading.Loading(0, "Start Field Init");
 	width = 1280;
 	height = 720;
@@ -253,6 +258,7 @@ void FieldInit()
 	addBrick(0, -2);
 
 	loading.Loading(100, "End Field Init");
+	return succes;
 }
 int End()
 {
@@ -266,10 +272,10 @@ int main(int argc, char* argv[])
 	cout << "Pixel world has been started" << endl;
 	bool succes = true;
 	succes &= LauncherInit();
-	//FieldInit();
-	//GlutInit(argc, argv);
+	succes &= (succes ? FieldInit() : false);
+	//succes &= (succes?GlutInit(argc, argv):false);
 
-	//Sleep(2000);
+	Sleep(2000);
 
 	//glutMainLoop();
 

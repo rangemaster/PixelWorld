@@ -1,5 +1,8 @@
 #include "Client.h"
 
+#include <iostream>
+#include <string>
+using namespace std;
 
 Client::Client()
 {
@@ -32,7 +35,7 @@ int Client::Connect(char *IP, int Port)
 
 int Client::Send(char *Buf, int len, int Client)
 {
-	int slen=0;
+	int slen = 0;
 	slen = send(sock, Buf, len, Client);
 	if (slen < 0)
 	{
@@ -57,4 +60,22 @@ int Client::SendPackage(Package *package)
 int Client::RecivePackage(Package *package)
 {
 	return Recive((char *)&package, sizeof(package), 1);
+}
+bool Client::SendPosition(Pos3D pos)
+{
+	int value11, value12, value21, value22, value31, value32;
+	char buf11, buf12, buf21, buf22, buf31, buf32;
+	value11 = (int)(pos.x);
+	value21 = (int)(pos.y);
+	buf11 = (char)(value11);
+	buf21 = (char)(value21);
+	if (Send(&buf11, 1, 0) == -1)
+		return false;
+	if (Send(&buf21, 1, 0) == -1)
+		return false;
+	return true;
+}
+bool Client::SendVector(Vect3D pos)
+{
+	return false;
 }

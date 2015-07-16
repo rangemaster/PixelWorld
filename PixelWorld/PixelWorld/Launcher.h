@@ -19,6 +19,7 @@ public:
 	bool ReciveTestCharacter(void);
 	bool SendTestMessage(string c);
 	bool ReciveTestMessage(void);
+	bool SendPlayerInfo(void);
 private:
 	Client client;
 	//void Start(void);
