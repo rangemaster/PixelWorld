@@ -67,7 +67,8 @@ int Server::StartServer(int Port)
 				succes &= RecivePosition(clients, pos);
 				succes &= ReciveVector(clients, vect);
 				ss = std::stringstream();
-				ss << "Pos: " << pos.x << ", " << pos.y << ", " << pos.z;
+				ss << "Pos: " << pos.x << ", " << pos.y << ", " << pos.z << endl;
+				ss << "Vect: " << vect.x << ", " << vect.y << ", " << vect.z;
 				Print(ss.str());
 				clients++;
 				continue;
@@ -190,19 +191,24 @@ void Server::RecivePackages()
 }
 bool Server::RecivePosition(int clientIndex, Pos3D &pos)
 {
+	return Recive3D(clientIndex, pos.x, pos.y, pos.z);
+}
+bool Server::ReciveVector(int clientIndex, Vect3D &vect)
+{
+	return Recive3D(clientIndex, vect.x, vect.y, vect.z);
+}
+bool Server::Recive3D(int clientIndex, double &x, double &y, double &z)
+{
 	char buf11, buf12, buf21, buf22, buf31, buf32;
 	Recive(&buf11, 1, clientIndex);
 	//Recive(&buf12, 1, clientIndex);
 	Recive(&buf21, 1, clientIndex);
 	//Recive(&buf22, 1, clientIndex);
-	//Recive(&buf31, 1, clientIndex);
+	Recive(&buf31, 1, clientIndex);
 	//Recive(&buf32, 1, clientIndex);
-	pos.x = (int)(buf11);
-	pos.y = (int)(buf21);
-	return false;
-}
-bool Server::ReciveVector(int clientIndex, Vect3D vect)
-{
+	x = (int)(buf11);
+	y = (int)(buf21);
+	z = (int)(buf31);
 	return false;
 }
 

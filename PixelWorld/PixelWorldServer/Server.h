@@ -27,7 +27,8 @@ public:
 	void SendPackages(void);
 	void RecivePackages(void);
 	bool RecivePosition(int, Pos3D &);
-	bool ReciveVector(int, Vect3D);
+	bool ReciveVector(int, Vect3D&);
+	bool Recive3D(int, double &x, double &y, double &z);
 	int EndSocket();
 private:
 	SOCKET sock;

@@ -97,6 +97,10 @@ bool Launcher::ReciveTestMessage(void)
 }
 bool Launcher::SendPlayerInfo(void)
 {
-	Pos3D pos(1, 1, 1);
-	return client.SendPosition(pos);
+	bool succes = true;
+	Pos3D pos(1, 2, 3);
+	Vect3D vect(4, 5, 6);
+	succes &= client.SendPosition(pos);
+	succes &= client.SendVector(vect);
+	return succes;
 }

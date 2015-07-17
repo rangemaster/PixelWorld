@@ -21,6 +21,7 @@ public:
 	int RecivePackage(Package *package);
 	bool SendPosition(Pos3D pos);
 	bool SendVector(Vect3D pos);
+	bool Send3D(double x, double y, double z);
 private:
 	SOCKET sock;
 	SOCKADDR_IN i_sock;

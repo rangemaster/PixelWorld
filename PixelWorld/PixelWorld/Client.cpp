@@ -63,19 +63,30 @@ int Client::RecivePackage(Package *package)
 }
 bool Client::SendPosition(Pos3D pos)
 {
+	return Send3D(pos.x, pos.y, pos.z);
+}
+bool Client::SendVector(Vect3D vect)
+{
+	return Send3D(vect.x, vect.y, vect.z);
+}
+bool Client::Send3D(double x, double y, double z)
+{
 	int value11, value12, value21, value22, value31, value32;
 	char buf11, buf12, buf21, buf22, buf31, buf32;
-	value11 = (int)(pos.x);
-	value21 = (int)(pos.y);
+	value11 = (int)(x);
+	value21 = (int)(y);
+	value31 = (int)(z);
 	buf11 = (char)(value11);
+	//buf12 = (char)(value12);
 	buf21 = (char)(value21);
+	//buf22 = (char)(value22);
+	buf31 = (char)(value31);
+	//buf32 = (char)(value32);
 	if (Send(&buf11, 1, 0) == -1)
 		return false;
 	if (Send(&buf21, 1, 0) == -1)
 		return false;
+	if (Send(&buf31, 1, 0) == -1)
+		return false;
 	return true;
-}
-bool Client::SendVector(Vect3D pos)
-{
-	return false;
 }
