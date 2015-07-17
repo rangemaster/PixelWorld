@@ -7,6 +7,7 @@
 #include <string>
 #include <string.h>
 #include "Packages.h"
+#include "PackageHandler.h"
 
 using namespace std;
 
@@ -28,7 +29,7 @@ public:
 	void RecivePackages(void);
 	bool RecivePosition(int, Pos3D &);
 	bool ReciveVector(int, Vect3D&);
-	bool Recive3D(int, double &x, double &y, double &z);
+	bool RecivePlayerInfo(int, Pos3D&, Vect3D&);
 	int EndSocket();
 private:
 	SOCKET sock;
@@ -37,5 +38,7 @@ private:
 	SOCKADDR_IN i_sock2;
 	WSADATA Data;
 	int clients = 0;
+	PackageHandler handler;
+	bool Recive3D(int, double &x, double &y, double &z);
 };
 

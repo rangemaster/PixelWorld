@@ -74,19 +74,28 @@ bool Client::Send3D(double x, double y, double z)
 	int value11, value12, value21, value22, value31, value32;
 	char buf11, buf12, buf21, buf22, buf31, buf32;
 	value11 = (int)(x);
+	value12 = (int)(((double)x - (double)value11) * 100);
 	value21 = (int)(y);
+	value22 = (int)(((double)y - (double)value21) * 100);
 	value31 = (int)(z);
+	value32 = (int)(((double)z - (double)value31) * 100);
 	buf11 = (char)(value11);
-	//buf12 = (char)(value12);
+	buf12 = (char)(value12);
 	buf21 = (char)(value21);
-	//buf22 = (char)(value22);
+	buf22 = (char)(value22);
 	buf31 = (char)(value31);
-	//buf32 = (char)(value32);
+	buf32 = (char)(value32);
 	if (Send(&buf11, 1, 0) == -1)
+		return false;
+	if (Send(&buf12, 1, 0) == -1)
 		return false;
 	if (Send(&buf21, 1, 0) == -1)
 		return false;
+	if (Send(&buf22, 1, 0) == -1)
+		return false;
 	if (Send(&buf31, 1, 0) == -1)
+		return false;
+	if (Send(&buf32, 1, 0) == -1)
 		return false;
 	return true;
 }

@@ -98,8 +98,8 @@ bool Launcher::ReciveTestMessage(void)
 bool Launcher::SendPlayerInfo(void)
 {
 	bool succes = true;
-	Pos3D pos(1, 2, 3);
-	Vect3D vect(4, 5, 6);
+	Pos3D pos(1.12345, 2.23456, 3.34567);
+	Vect3D vect(4.4, 5.5, 6.6);
 	succes &= client.SendPosition(pos);
 	succes &= client.SendVector(vect);
 	return succes;

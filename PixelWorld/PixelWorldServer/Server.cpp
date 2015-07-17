@@ -1,6 +1,7 @@
 #include "Server.h"
 Server::Server()
 {
+	handler = PackageHandler();
 }
 Server::~Server()
 {
@@ -67,7 +68,7 @@ int Server::StartServer(int Port)
 				succes &= RecivePosition(clients, pos);
 				succes &= ReciveVector(clients, vect);
 				ss = std::stringstream();
-				ss << "Pos: " << pos.x << ", " << pos.y << ", " << pos.z << endl;
+				ss << "Pos: " << (double)(pos.x) << ", " << (double)pos.y << ", " << (double)pos.z << endl;
 				ss << "Vect: " << vect.x << ", " << vect.y << ", " << vect.z;
 				Print(ss.str());
 				clients++;
@@ -200,16 +201,30 @@ bool Server::ReciveVector(int clientIndex, Vect3D &vect)
 bool Server::Recive3D(int clientIndex, double &x, double &y, double &z)
 {
 	char buf11, buf12, buf21, buf22, buf31, buf32;
+	int value11, value12, value21, value22, value31, value32;
 	Recive(&buf11, 1, clientIndex);
-	//Recive(&buf12, 1, clientIndex);
+	Recive(&buf12, 1, clientIndex);
 	Recive(&buf21, 1, clientIndex);
-	//Recive(&buf22, 1, clientIndex);
+	Recive(&buf22, 1, clientIndex);
 	Recive(&buf31, 1, clientIndex);
-	//Recive(&buf32, 1, clientIndex);
-	x = (int)(buf11);
-	y = (int)(buf21);
-	z = (int)(buf31);
+	Recive(&buf32, 1, clientIndex);
+	value11 = (int)(buf11);
+	value12 = (int)(buf12);
+	value21 = (int)(buf21);
+	value22 = (int)(buf22);
+	value31 = (int)(buf31);
+	value32 = (int)(buf32);
+	x = buf11 + ((double)buf12 / 100);
+	y = buf21 + ((double)buf22 / 100);
+	z = buf31 + ((double)buf32 / 100);
 	return false;
+}
+bool Server::RecivePlayerInfo(int clientIndex, Pos3D &pos, Vect3D &vect)
+{
+	bool succes = true;
+	succes &= RecivePosition(clientIndex, pos);
+	succes &= ReciveVector(clientIndex, vect);
+	return succes;
 }
 
 int Server::EndSocket()

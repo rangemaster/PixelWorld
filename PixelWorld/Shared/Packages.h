@@ -8,9 +8,9 @@ struct Package
 };
 struct Vect3D
 {
-	double x = 0;
-	double y = 0;
-	double z = 0;
+	double x = 0.0;
+	double y = 0.0;
+	double z = 0.0;
 	Vect3D(double vectx, double vecty, double vectz)
 	{
 		x = vectx;
@@ -21,9 +21,9 @@ struct Vect3D
 };
 struct Pos3D
 {
-	double x = 0;
-	double y = 0;
-	double z = 0;
+	double x = 0.0;
+	double y = 0.0;
+	double z = 0.0;
 	Pos3D(double posx, double posy, double posz) {
 		x = posx;
 		y = posy;
@@ -36,3 +36,5 @@ struct Pos3D
 #define TEST_CHAR_SERVER 's'
 #define TEST_STRING_CLIENT "Client"
 #define TEST_STRING_SERVER "Server"
+
+#define ID_PLAYERINFO 20
